@@ -1,27 +1,37 @@
-import { kv } from "@vercel/kv";
-
-// import styles from "./page.module.css";
+import styles from "./page.module.css";
 import Link from "next/link";
+import { cookies } from "next/headers";
 
-export default async function Home() {
-	async function getUsername(): Promise<{ text: string }> {
-		await kv.hset("user:me", { helloa: "kirar" });
-		// const user = await kv.hgetall("user:me");
+export default function Home() {
+	const user = cookies().get("user")?.value;
 
-		return { text: (await kv.hget("user:me", "helloa")) || "" };
+	function getUsername(): { text: string } {
+		return { text: !!user ? ", " + user : "" };
 	}
 
 	return (
 		<main className="main">
 			<div id="welcome-div">
 				<h1>
-					Welcome to Panitola H.S. School&apos;s homepage,{" "}
-					{(await getUsername()).text}
+					Welcome to Panitola H.S. School&apos;s homepage
+					{getUsername().text}
 				</h1>
 				<h2>
-					<Link className="link" href="/">
-						Explore!
-					</Link>
+					{!!user ? (
+						<Link className="link" href="/">
+							Explore!
+						</Link>
+					) : (
+						<>
+							<Link className="link" href="/login">
+								Login
+							</Link>{" "}
+							or{" "}
+							<Link className="link" href="/signup">
+								Signup
+							</Link>
+						</>
+					)}
 				</h2>
 			</div>
 			<p>

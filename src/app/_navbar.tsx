@@ -1,16 +1,22 @@
-import { kv } from "@vercel/kv";
+"use client";
 
 import Link from "next/link";
 import styles from "./_navbar.module.css";
 
-export default async function Navbar() {
-	const userExists = !!(await kv.hget("user:me", "user"));
-	console.log(userExists);
+export default function Navbar() {
+	// const userExists = !!cookies().get("user")?.value;
+	const userExists = true;
 
 	async function logout() {
-		kv.hset("user:me", {
-			user: null,
+		await fetch("/api/user", {
+			method: "POST",
+			body: "logout",
+			headers: {
+				"content-type": "application/json",
+			},
 		});
+
+		window.location.replace("/");
 	}
 
 	return (
