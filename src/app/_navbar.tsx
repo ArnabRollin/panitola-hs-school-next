@@ -2,15 +2,21 @@
 
 import Link from "next/link";
 import styles from "./_navbar.module.css";
+import useSWR, { Fetcher } from "swr";
 
 export default function Navbar() {
-	// const userExists = !!cookies().get("user")?.value;
-	const userExists = true;
+	const fetcher = (url: RequestInfo | URL) =>
+		fetch(url).then((res) => res.json());
+	const { data } = useSWR("/api/user", fetcher);
+
+	const userExists = !!data;
 
 	async function logout() {
 		await fetch("/api/user", {
 			method: "POST",
-			body: "logout",
+			body: JSON.stringify({
+				command: "logout",
+			}),
 			headers: {
 				"content-type": "application/json",
 			},

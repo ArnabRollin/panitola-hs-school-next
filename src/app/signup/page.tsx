@@ -2,11 +2,8 @@
 
 import styles from "./page.module.css";
 import { FormEvent } from "react";
-import { useRouter } from "next/navigation";
 
 export default function Signup() {
-	const router = useRouter();
-
 	async function useHandleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
@@ -29,7 +26,7 @@ export default function Signup() {
 			},
 		});
 
-		router.push("/");
+		window.location.replace("/");
 	}
 
 	return (
